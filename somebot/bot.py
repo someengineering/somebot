@@ -18,8 +18,11 @@ import discord
 log = logging.getLogger(__name__)
 
 internal_channels = ("ui-internal", "dev-internal")
-nag_message = "Are you sure this is an internal message? Don't forget to use the public channel!"
+nag_message = (
+    "Are you sure this is an internal message? Don't forget to use the public channel!"
+)
 threshold = 32
+
 
 class SomeBot(discord.Client):
     def __init__(self, *args, **kwargs):
@@ -30,10 +33,15 @@ class SomeBot(discord.Client):
         log.info(f"{self.user.name} has connected to Discord!")
 
     async def on_message(self, message: discord.Message):
-        log.debug(f"Message from {message.author} in {message.channel.name}: {message.content}")
+        log.debug(
+            f"Message from {message.author} in {message.channel.name}: {message.content}"
+        )
         if message.author == self.user:
             return
 
-        if message.channel.name in internal_channels and len(message.content) > threshold:
+        if (
+            message.channel.name in internal_channels
+            and len(message.content) > threshold
+        ):
             log.debug(f"Message from {message.author} in internal channel")
             await message.channel.send(f"{message.author.mention} {nag_message}")

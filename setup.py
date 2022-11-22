@@ -23,39 +23,32 @@ setup(
     description="Some Engineering Discord Bot",
     license="Apache 2.0",
     packages=find_packages(),
-    long_description=read('README.md'),
+    long_description=read("README.md"),
     entry_points={
-        'console_scripts': [
-            'somebot = somebot.__main__:main'
-        ],
+        "console_scripts": ["somebot = somebot.__main__:main"],
     },
     include_package_data=True,
     zip_safe=False,
     install_requires=[
-        'discord.py >= 1.6.0',
+        "discord.py >= 1.6.0",
     ],
-    setup_requires=['pytest-runner'],
-    tests_require=['pytest'],
+    setup_requires=["pytest-runner"],
+    tests_require=["pytest"],
     classifiers=[
         # Current project status
-        'Development Status :: 4 - Beta',
-
+        "Development Status :: 4 - Beta",
         # Audience
-        'Intended Audience :: Information Technology',
-
+        "Intended Audience :: Information Technology",
         # License information
-        'License :: OSI Approved :: Apache Software License',
-
+        "License :: OSI Approved :: Apache Software License",
         # Supported python versions
-        'Programming Language :: Python :: 3.8',
-
+        "Programming Language :: Python :: 3.11",
         # Supported OS's
-        'Operating System :: POSIX :: Linux',
-        'Operating System :: Unix',
-
+        "Operating System :: POSIX :: Linux",
+        "Operating System :: Unix",
         # Extra metadata
-        'Environment :: Console',
-        'Natural Language :: English',
+        "Environment :: Console",
+        "Natural Language :: English",
     ],
-    keywords='discord bot'
+    keywords="discord bot",
 )
