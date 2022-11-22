@@ -13,6 +13,7 @@
 # limitations under the License.
 import logging
 import discord
+import time
 
 
 log = logging.getLogger(__name__)
@@ -22,12 +23,14 @@ nag_message = (
     "Are you sure this is an internal message? Don't forget to use the public channel!"
 )
 threshold = 32
+remind_every = 60 * 15
 
 
 class SomeBot(discord.Client):
     def __init__(self, *args, **kwargs):
         kwargs.update({"intents": discord.Intents.all()})
         super().__init__(*args, **kwargs)
+        self.last_reminded = {}
 
     async def on_ready(self):
         log.info(f"{self.user.name} has connected to Discord!")
@@ -39,6 +42,12 @@ class SomeBot(discord.Client):
         if (
             message.channel.name in internal_channels
             and len(message.content) > threshold
+            and (
+                message.author.id not in self.last_reminded
+                or time.time() - self.last_reminded.get(message.author.id, 0)
+                > remind_every
+            )
         ):
             log.debug(f"Message from {message.author} in internal channel")
             await message.channel.send(f"{message.author.mention} {nag_message}")
+            self.last_reminded[message.author.id] = time.time()
