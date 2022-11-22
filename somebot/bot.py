@@ -33,9 +33,6 @@ class SomeBot(discord.Client):
         log.info(f"{self.user.name} has connected to Discord!")
 
     async def on_message(self, message: discord.Message):
-        log.debug(
-            f"Message from {message.author} in {message.channel.name}: {message.content}"
-        )
         if message.author == self.user:
             return
 
