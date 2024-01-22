@@ -31,6 +31,7 @@ setup(
     zip_safe=False,
     install_requires=[
         "discord.py >= 1.6.0",
+        "slack_bolt >= 1.18.0",
     ],
     setup_requires=["pytest-runner"],
     tests_require=["pytest"],
