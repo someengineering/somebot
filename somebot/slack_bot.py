@@ -4,7 +4,6 @@ from slack_bolt import App
 from slack_bolt.adapter.socket_mode import SocketModeHandler
 from slack_sdk import WebClient
 from slack_sdk.errors import SlackApiError
-from pprint import pprint
 
 log = logging.getLogger(__name__)
 
@@ -21,7 +20,7 @@ class SomeSlackBot:
         self.app.message()(self.handle_message_events)
 
     def run(self):
-        self.fetch_user_id_to_username_mapping()
+        # self.fetch_user_id_to_username_mapping()
         self.handler.start()
 
     def fetch_user_id_to_username_mapping(self):
@@ -35,7 +34,6 @@ class SomeSlackBot:
             print(f"Error fetching users list: {e}")
 
     def handle_message_events(self, event, say):
-        pprint(event)
         if event.get("type") == "message" and event.get("subtype") == "bot_message":
-            log.debug(f"Got message in Slack, sending to queue")
+            log.debug("Got message in Slack, sending to queue")
             self.message_queue.put(event)

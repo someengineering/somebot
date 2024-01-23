@@ -18,7 +18,6 @@ import logging
 import threading
 import signal
 import queue
-import asyncio
 from .discord_bot import SomeDiscordBot
 from .slack_bot import SomeSlackBot
 from typing import Any
@@ -77,8 +76,9 @@ def main() -> None:
     discord_bot = SomeDiscordBot(
         message_queue=message_queue, shutdown_event=shutdown_event, channel_id=DISCORD_FORWARD_CHANNEL_ID
     )
-    discord_bot_thread = threading.Thread(target=start_discord_bot, args=(discord_bot,))
-    discord_bot_thread.daemon = True
+    discord_bot_thread = threading.Thread(
+        target=start_discord_bot, args=(discord_bot,), daemon=True, name="discord_bot"
+    )
     discord_bot_thread.start()
 
     slack_bot = SomeSlackBot(
@@ -88,8 +88,7 @@ def main() -> None:
         message_queue=message_queue,
         forward_user=SLACK_FORWARD_USER,
     )
-    slack_bot_thread = threading.Thread(target=start_slack_bot, args=(slack_bot,))
-    slack_bot_thread.daemon = True
+    slack_bot_thread = threading.Thread(target=start_slack_bot, args=(slack_bot,), daemon=True, name="slack_bot")
     slack_bot_thread.start()
 
     shutdown_event.wait()
