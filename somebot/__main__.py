@@ -84,7 +84,6 @@ def main() -> None:
         app_token=SLACK_APP_TOKEN,
         signing_key=SLACK_SIGNING_KEY,
         message_queue=message_queue,
-        forward_user=SLACK_FORWARD_USER,
     )
     slack_bot_thread = threading.Thread(target=start_slack_bot, args=(slack_bot,), daemon=True, name="slack_bot")
     slack_bot_thread.start()
