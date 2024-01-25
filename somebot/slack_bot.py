@@ -9,9 +9,8 @@ log = logging.getLogger(__name__)
 
 
 class SomeSlackBot:
-    def __init__(self, bot_token: str, app_token: str, signing_key: str, message_queue: Queue, forward_user: str):
+    def __init__(self, bot_token: str, app_token: str, signing_key: str, message_queue: Queue):
         self.message_queue = message_queue
-        self.forward_user = forward_user
         self.app = App(token=bot_token, signing_secret=signing_key)
         self.handler = SocketModeHandler(self.app, app_token)
         self.client = WebClient(token=bot_token)
