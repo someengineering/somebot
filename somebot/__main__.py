@@ -34,6 +34,7 @@ SLACK_BOT_TOKEN = os.getenv("SLACK_BOT_TOKEN")
 SLACK_APP_TOKEN = os.getenv("SLACK_APP_TOKEN")
 SLACK_SIGNING_KEY = os.getenv("SLACK_SIGNING_KEY")
 DISCORD_FORWARD_CHANNEL_ID = os.getenv("DISCORD_FORWARD_CHANNEL_ID")
+DISCORD_FORWARD_CHANNEL_ID_DEV = os.getenv("DISCORD_FORWARD_CHANNEL_ID_DEV")
 
 if (
     not DISCORD_TOKEN
@@ -48,6 +49,7 @@ if (
     sys.exit(1)
 
 DISCORD_FORWARD_CHANNEL_ID = int(DISCORD_FORWARD_CHANNEL_ID)
+DISCORD_FORWARD_CHANNEL_ID_DEV = int(DISCORD_FORWARD_CHANNEL_ID_DEV)
 
 
 def start_discord_bot(bot: SomeDiscordBot) -> None:
@@ -72,7 +74,10 @@ def main() -> None:
     message_queue = queue.Queue()
 
     discord_bot = SomeDiscordBot(
-        message_queue=message_queue, shutdown_event=shutdown_event, channel_id=DISCORD_FORWARD_CHANNEL_ID
+        message_queue=message_queue,
+        shutdown_event=shutdown_event,
+        channel_id=DISCORD_FORWARD_CHANNEL_ID,
+        channel_id_dev=DISCORD_FORWARD_CHANNEL_ID_DEV,
     )
     discord_bot_thread = threading.Thread(
         target=start_discord_bot, args=(discord_bot,), daemon=True, name="discord_bot"

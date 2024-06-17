@@ -17,7 +17,13 @@ remind_every = 60 * 15
 
 class SomeDiscordBot(discord.Client):
     def __init__(
-        self, *args, message_queue: queue.Queue, shutdown_event: threading.Event, channel_id: int, **kwargs
+        self,
+        *args,
+        message_queue: queue.Queue,
+        shutdown_event: threading.Event,
+        channel_id: int,
+        channel_id_dev: int,
+        **kwargs,
     ) -> None:
         kwargs.update({"intents": discord.Intents.all()})
         super().__init__(*args, **kwargs)
@@ -25,11 +31,14 @@ class SomeDiscordBot(discord.Client):
         self.shutdown_event = shutdown_event
         self.last_reminded = {}
         self.discord_channel_id = channel_id
+        self.discord_channel_id_dev = channel_id_dev
         self.discord_channel = None
+        self.discord_channel_dev = None
 
     async def on_ready(self) -> None:
         log.info(f"{self.user.name} has connected to Discord!")
         self.discord_channel = self.get_channel(self.discord_channel_id)
+        self.discord_channel_dev = self.get_channel(self.discord_channel_id_dev)
         asyncio.create_task(self.process_message_queue())
 
     async def on_message(self, message: discord.Message) -> None:
@@ -56,11 +65,17 @@ class SomeDiscordBot(discord.Client):
         while not self.shutdown_event.is_set():
             try:
                 message = await asyncio.to_thread(self.get_message)
+                channel = message.get("channel_name")
                 log.debug("Got message from queue, converting Slack to Discord format.")
                 message = convert_slack_message_to_discord(message)
-                if self.discord_channel:
+                if channel == "alerts" and self.discord_channel:
                     log.debug(f"Sending message to {self.discord_channel}")
                     await self.discord_channel.send(content=message.get("content"), embeds=message.get("embeds", []))
+                elif channel == "alerts-dev" and self.discord_channel_dev:
+                    log.debug(f"Sending message to {self.discord_channel_dev}")
+                    await self.discord_channel_dev.send(
+                        content=message.get("content"), embeds=message.get("embeds", [])
+                    )
             except queue.Empty:
                 pass
 
